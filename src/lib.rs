@@ -104,7 +104,7 @@ extern crate log;
 extern crate base64;
 extern crate serde;
 extern crate serde_json;
-extern crate sodiumoxide;
+// extern crate sodiumoxide;
 
 mod caveat;
 mod crypto;
@@ -128,7 +128,8 @@ pub type Result<T> = std::result::Result<T, MacaroonError>;
 /// calling this, the underlying random-number generator is not guaranteed to be thread-safe
 /// if you don't.
 pub fn initialize() -> Result<()> {
-    sodiumoxide::init().map_err(|_| MacaroonError::InitializationError)
+    // sodiumoxide::init().map_err(|_| MacaroonError::InitializationError)
+    Ok(())
 }
 
 // An implementation that represents any binary data. By spec, most fields in a
@@ -361,7 +362,8 @@ impl Macaroon {
     /// A third-party caveat is a caveat which must be verified by a third party
     /// using macaroons provided by them (referred to as "discharge macaroons").
     pub fn add_third_party_caveat(&mut self, location: &str, key: &MacaroonKey, id: ByteString) {
-        let vid: Vec<u8> = crypto::encrypt_key(&self.signature, key);
+        // let vid: Vec<u8> = crypto::encrypt_key(&self.signature, key);
+        let vid: Vec<u8> = vec![0; 32];
         let caveat: caveat::Caveat = caveat::new_third_party(id, ByteString(vid), location);
         self.signature = caveat.sign(&self.signature);
         self.caveats.push(caveat);
